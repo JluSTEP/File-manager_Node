@@ -104,9 +104,9 @@ rl.on("line", (input) => {
             break;
           case "hash":
             if (args.length < 2) {
-              console.log("Invalid input");
+              console.log("Invalid input. Usage: os hash <file-path>");
             } else {
-              getFileHash(args[1]);
+              getFileHash(args[1]);  // Передаем путь к файлу
             }
             break;
           default:
