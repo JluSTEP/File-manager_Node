@@ -9,6 +9,7 @@ import {
   getArchitecture,
   getFileHash,
 } from "./osOperations.js";
+import { compressFile, decompressFile } from "./compression.js";  // Импортируем функции сжатия и распаковки
 
 // Получаем имя пользователя
 const args = process.argv.slice(2);
@@ -112,6 +113,20 @@ rl.on("line", (input) => {
           default:
             console.log("Invalid input");
         }
+      }
+      break;
+    case "compress":
+      if (args.length < 2) {
+        console.log("Invalid input. Usage: compress <file-path> <destination-path>");
+      } else {
+        compressFile(args[0], args[1]); // Сжимаем файл
+      }
+      break;
+    case "decompress":
+      if (args.length < 2) {
+        console.log("Invalid input. Usage: decompress <file-path> <destination-path>");
+      } else {
+        decompressFile(args[0], args[1]); // Распаковываем файл
       }
       break;
     case ".exit":
