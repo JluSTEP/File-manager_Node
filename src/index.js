@@ -1,6 +1,14 @@
 import readline from "readline";
 import { goUp, changeDirectory, listDirectory, printCurrentDir } from "./navigation.js";
 import { cat, add, renameFile, copy, move, remove } from "./fileOperations.js";
+import {
+  getEOL,
+  getCPUs,
+  getHomeDir,
+  getSystemUsername,
+  getArchitecture,
+  getFileHash,
+} from "./osOperations.js";
 
 // Получаем имя пользователя
 const args = process.argv.slice(2);
@@ -72,6 +80,38 @@ rl.on("line", (input) => {
         console.log("Invalid input");
       } else {
         remove(args.join(" "));
+      }
+      break;
+    case "os":
+      if (args.length === 0) {
+        console.log("Invalid input");
+      } else {
+        switch (args[0]) {
+          case "--EOL":
+            getEOL();
+            break;
+          case "--cpus":
+            getCPUs();
+            break;
+          case "--homedir":
+            getHomeDir();
+            break;
+          case "--username":
+            getSystemUsername();
+            break;
+          case "--architecture":
+            getArchitecture();
+            break;
+          case "hash":
+            if (args.length < 2) {
+              console.log("Invalid input");
+            } else {
+              getFileHash(args[1]);
+            }
+            break;
+          default:
+            console.log("Invalid input");
+        }
       }
       break;
     case ".exit":
