@@ -1,7 +1,7 @@
 {
   "name": "file-manager",
   "version": "1.0.0",
-  "description": "",
+  "description": "creator Lee V V",
   "main": "src/index.js",
   "type": "module",
   "scripts": {

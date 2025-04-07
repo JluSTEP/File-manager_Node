@@ -3,7 +3,6 @@ import path from 'path';
 import { createBrotliCompress, createBrotliDecompress } from 'zlib';
 
 /**
- * Сжать файл с использованием алгоритма Brotli.
  * @param {string} filePath - Путь к файлу, который нужно сжать
  * @param {string} destPath - Путь, куда сохранить сжатый файл
  */
@@ -31,9 +30,8 @@ export const compressFile = (filePath, destPath) => {
 };
 
 /**
- * Распаковать файл с использованием алгоритма Brotli.
- * @param {string} filePath - Путь к сжатому файлу, который нужно распаковать
- * @param {string} destPath - Путь, куда сохранить распакованный файл
+ * @param {string} filePath 
+ * @param {string} destPath 
  */
 export const decompressFile = (filePath, destPath) => {
   const inputPath = path.isAbsolute(filePath) ? filePath : path.join(process.cwd(), filePath);
