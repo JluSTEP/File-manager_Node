@@ -5,7 +5,7 @@ import path from "path";
 
 // Получить EOL (системный конец строки)
 export const getEOL = () => {
-  console.log(`EOL: ${os.EOL}`);
+  console.log(`EOL: ${os.EOL === '\n' ? '\\n' : '\\r\\n'}`); // Явно отображаем символы EOL
 };
 
 // Получить информацию о процессорах

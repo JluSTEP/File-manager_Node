@@ -3,6 +3,8 @@ import path from "path";
 import os from "os";
 import { createBrotliCompress, createBrotliDecompress } from "zlib";
 import readline from "readline";
+import { copy, move } from "./fileOperations.js";
+import { getEOL, getCPUs, getHomeDir, getSystemUsername, getArchitecture } from "./osOperations.js";
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -163,19 +165,19 @@ const decompressFile = (filePath, destPath) => {
 const getOSInfo = (option) => {
   switch (option) {
     case "--EOL":
-      console.log(os.EOL);
+      getEOL(); // Вызываем обновлённую функцию
       break;
     case "--cpus":
-      console.log(os.cpus());
+      getCPUs();
       break;
     case "--homedir":
-      console.log(os.homedir());
+      getHomeDir();
       break;
     case "--username":
-      console.log(os.userInfo().username);
+      getSystemUsername();
       break;
     case "--architecture":
-      console.log(os.arch());
+      getArchitecture();
       break;
     default:
       console.log("Invalid input.");
@@ -269,6 +271,20 @@ const rlListener = () => {
           console.log("Invalid input. Usage: os --<option>");
         } else {
           getOSInfo(args[0]);
+        }
+        break;
+      case "cp":
+        if (args.length < 2) {
+          console.log("Invalid input. Usage: cp <source-path> <destination-path>");
+        } else {
+          copy(args[0], args[1]);
+        }
+        break;
+      case "mv":
+        if (args.length < 2) {
+          console.log("Invalid input. Usage: mv <source-path> <destination-path>");
+        } else {
+          move(args[0], args[1]);
         }
         break;
       case ".exit":

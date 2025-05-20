@@ -50,17 +50,30 @@ export const copy = (srcPath, destPath) => {
   const fullSrcPath = path.isAbsolute(srcPath)
     ? srcPath
     : path.join(process.cwd(), srcPath);
-  const fullDestPath = path.isAbsolute(destPath)
+  let fullDestPath = path.isAbsolute(destPath)
     ? destPath
     : path.join(process.cwd(), destPath);
 
   if (fs.existsSync(fullSrcPath) && fs.statSync(fullSrcPath).isFile()) {
+    // Если destPath — это директория, добавляем имя файла
+    if (fs.existsSync(fullDestPath) && fs.statSync(fullDestPath).isDirectory()) {
+      fullDestPath = path.join(fullDestPath, path.basename(fullSrcPath));
+    }
+
     const readStream = fs.createReadStream(fullSrcPath);
     const writeStream = fs.createWriteStream(fullDestPath);
+
     readStream.pipe(writeStream);
-    console.log(`File copied to ${fullDestPath}`);
+
+    writeStream.on("finish", () => {
+      console.log(`File copied to ${fullDestPath}`);
+    });
+
+    writeStream.on("error", (err) => {
+      console.log("Operation failed:", err.message);
+    });
   } else {
-    console.log("Operation failed");
+    console.log("Operation failed. File not found or invalid path.");
   }
 };
 
@@ -69,15 +82,25 @@ export const move = (srcPath, destPath) => {
   const fullSrcPath = path.isAbsolute(srcPath)
     ? srcPath
     : path.join(process.cwd(), srcPath);
-  const fullDestPath = path.isAbsolute(destPath)
+  let fullDestPath = path.isAbsolute(destPath)
     ? destPath
     : path.join(process.cwd(), destPath);
 
   if (fs.existsSync(fullSrcPath) && fs.statSync(fullSrcPath).isFile()) {
-    fs.renameSync(fullSrcPath, fullDestPath);
-    console.log(`File moved to ${fullDestPath}`);
+    // Если destPath — это директория, добавляем имя файла
+    if (fs.existsSync(fullDestPath) && fs.statSync(fullDestPath).isDirectory()) {
+      fullDestPath = path.join(fullDestPath, path.basename(fullSrcPath));
+    }
+
+    fs.rename(fullSrcPath, fullDestPath, (err) => {
+      if (err) {
+        console.log("Operation failed:", err.message);
+      } else {
+        console.log(`File moved to ${fullDestPath}`);
+      }
+    });
   } else {
-    console.log("Operation failed");
+    console.log("Operation failed. File not found or invalid path.");
   }
 };
 

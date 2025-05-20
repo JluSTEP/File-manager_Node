@@ -10,20 +10,34 @@ export const compressFile = (filePath, destPath) => {
   const inputPath = path.isAbsolute(filePath) ? filePath : path.join(process.cwd(), filePath);
   const outputPath = path.isAbsolute(destPath) ? destPath : path.join(process.cwd(), destPath);
 
-  if (fs.existsSync(inputPath) && fs.statSync(inputPath).isFile()) {
-    const readStream = fs.createReadStream(inputPath);
-    const writeStream = fs.createWriteStream(outputPath);
+  if (fs.existsSync(inputPath)) {
+    if (fs.statSync(inputPath).isDirectory()) {
+      console.log("Operation failed. Cannot compress a directory.");
+      return;
+    }
 
-    const brotliCompress = createBrotliCompress();
-    readStream.pipe(brotliCompress).pipe(writeStream);
+    if (fs.statSync(inputPath).isFile()) {
+      if (fs.existsSync(outputPath) && fs.statSync(outputPath).isDirectory()) {
+        console.log("Operation failed. Destination path cannot be a directory.");
+        return;
+      }
 
-    writeStream.on('finish', () => {
-      console.log(`File compressed successfully to ${outputPath}`);
-    });
+      const readStream = fs.createReadStream(inputPath);
+      const writeStream = fs.createWriteStream(outputPath);
 
-    writeStream.on('error', (err) => {
-      console.log('Error compressing file:', err.message);
-    });
+      const brotliCompress = createBrotliCompress();
+      readStream.pipe(brotliCompress).pipe(writeStream);
+
+      writeStream.on('finish', () => {
+        console.log(`File compressed successfully to ${outputPath}`);
+      });
+
+      writeStream.on('error', (err) => {
+        console.log('Error compressing file:', err.message);
+      });
+    } else {
+      console.log('Operation failed. File not found or invalid path.');
+    }
   } else {
     console.log('Operation failed. File not found or invalid path.');
   }
